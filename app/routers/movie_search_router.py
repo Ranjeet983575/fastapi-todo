@@ -88,35 +88,7 @@ def index_movie(movie: MovieRequest):
 
 @router.post("/search")
 def search_movies(request: SearchRequest):
-
-    try:
-
-        results = movie_search_service.search_movies(
-            query=request.query,
-            size=request.size
-        )
-
-        formatted_results = []
-
-        for result in results:
-
-            formatted_results.append({
-                "id": result["_id"],
-                "score": result["_score"],
-                "movie": result["_source"]
-            })
-
-        return {
-            "total_results": len(formatted_results),
-            "results": formatted_results
-        }
-
-    except Exception as e:
-
-        raise HTTPException(
-            status_code=500,
-            detail=str(e)
-        )
+   return movie_search_service.search_movies(request.query, request.size)
 
 @router.get("/all")
 def get_all_movies():

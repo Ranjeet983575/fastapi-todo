@@ -99,31 +99,10 @@ class MovieSearchService:
             }
         }
 
-        response = self.client.search(
-            index=self.config.opensearch_index,
-            body=body
-        )
-
-        hits = response.get("hits", {}).get("hits", [])
-
-        results = []
-        for hit in hits:
-            source = hit.get("_source", {})
-
-            results.append({
-                "id": hit.get("_id"),
-                "title": source.get("title"),
-                "description": source.get("description"),
-                "genre": source.get("genre"),
-                "release_year": source.get("release_year"),
-                "score": hit.get("_score")
-            })
-
-        return {
-            "total_results": response.get("hits", {}).get("total", {}).get("value", 0),
-            "results": results
-        }
-        
+        resp = self.client.search(index=self.config.opensearch_index, body=body)
+        hits = [hit["_source"] for hit in resp["hits"]["hits"]]
+        return {"results": hits, "total": resp["hits"]["total"]["value"]}
+            
     # =========================
     # Get All Movies
     # =========================
