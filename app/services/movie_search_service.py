@@ -115,26 +115,3 @@ class MovieSearchService:
             doc["_id"] = hit["_id"]
             docs.append(doc)
         return docs
-
-    # =========================
-    # Formatter (FIXED)
-    # =========================
-    def _format_hits(self, response):
-
-        hits = response.get("hits", {}).get("hits", [])
-
-        results = []
-
-        for hit in hits:
-
-            source = hit.get("_source", {})
-
-            results.append({
-                "id": hit.get("_id", ""),   # SAFE fallback
-                "title": source.get("title", ""),
-                "description": source.get("description", ""),
-                "genre": source.get("genre", ""),
-                "release_year": source.get("release_year", "")
-            })
-
-        return results
